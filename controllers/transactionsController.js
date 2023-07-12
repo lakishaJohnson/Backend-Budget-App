@@ -14,9 +14,14 @@ transactions.get("/", (req, res) => {
 });
 
 //SHOW
-transactions.get("/:arrayIndex", (req, res) => {
-  if (transactionsArray[req.params.arrayIndex]) {
-    res.json(transactionsArray[req.params.arrayIndex]);
+transactions.get("/:id", (req, res) => {
+  const { id } = req.params;
+  const transaction = transactionsArray.find(
+    (transaction) => transaction.id === id
+  );
+
+  if (transaction) {
+    res.json(transaction);
   } else {
     res.redirect("*");
   }
