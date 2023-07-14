@@ -6,7 +6,6 @@ const { v4: uuidv4 } = require("uuid");
 
 //CONFIGURATION
 const transactions = express.Router();
-const id = uuidv4(); // Generates a unique ID
 
 //INDEX
 transactions.get("/", (req, res) => {
@@ -23,12 +22,14 @@ transactions.get("/:id", (req, res) => {
   if (transaction) {
     res.json(transaction);
   } else {
-    res.redirect("*");
+    res.status(404).json({ error: "Not Found" });
   }
 });
 
 // CREATE
 transactions.post("/", (req, res) => {
+  const id = uuidv4();
+
   const { item_name, amount, date, from, category } = req.body;
 
   const newTransaction = {
@@ -44,12 +45,13 @@ transactions.post("/", (req, res) => {
 });
 
 // DELETE
-transactions.delete("/:arrayIndex", (req, res) => {
-  if (transactionsArray[req.params.arrayIndex]) {
-    const deleteTransaction = transactionsArray.splice(
-      req.params.arrayIndex,
-      1
-    );
+transactions.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  const transactionIndex = transactionsArray.findIndex(
+    (transaction) => transaction.id === id
+  );
+  if (transactionsArray[transactionIndex]) {
+    const deleteTransaction = transactionsArray.splice(transactionIndex, 1);
     res.status(200).json(deleteTransaction);
   } else {
     res.status(404).json({ error: "Not Found" });
@@ -57,10 +59,18 @@ transactions.delete("/:arrayIndex", (req, res) => {
 });
 
 // UPDATE
-transactions.put("/:arrayIndex", (req, res) => {
-  if (transactionsArray[req.params.arrayIndex]) {
-    transactionsArray[req.params.arrayIndex] = req.body;
-    res.status(200).json(transactionsArray[req.params.arrayIndex]);
+transactions.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const transactionIndex = transactionsArray.findIndex(
+    (transaction) => transaction.id === id
+  );
+
+  if (transactionIndex !== -1) {
+    transactionsArray[transactionIndex] = {
+      ...transactionsArray[transactionIndex],
+      ...req.body,
+    };
+    res.status(200).json(transactionsArray[transactionIndex]);
   } else {
     res.status(404).json({ error: "Not Found" });
   }
