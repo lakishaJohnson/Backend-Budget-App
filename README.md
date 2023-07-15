@@ -1,5 +1,5 @@
 # Budget App - Backend
-This is the backend component of the Budgeting App developed by Lakisha Johnson. It serves as the API server for handling transactions and interacting with the database.
+This is the backend component of the Budget App developed by Lakisha Johnson. It serves as the API server for handling transactions and interacting with the database.
 
 ## Technologies Used
 - Node.js: JavaScript runtime environment.
